@@ -149,7 +149,7 @@ export function buildWhatsAppMessage(products) {
   if (items.length === 0) return '';
 
   const lines = [
-    '🛍️ *Nuevo pedido — MaraviWear*',
+    '🛍️ *Nuevo pedido — Maravibewear*',
     '',
     '*Detalle del pedido:*',
     '',
