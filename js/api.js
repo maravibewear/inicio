@@ -7,7 +7,7 @@
  */
 
 /** @type {string} URL del endpoint JSON de Google Apps Script */
-export const API_URL = 'TU_URL_DE_GOOGLE_APPS_SCRIPT_AQUI';
+export const API_URL = 'https://script.google.com/macros/s/AKfycby5zMxdOz3z5-MjSstgsRaCpt1200fG_QuNkNqjZdd5lgfQaUPE84jV2fnhpj8YKtoK/exec';
 
 /** Tiempo máximo de espera para la petición (ms) */
 const FETCH_TIMEOUT = 15000;
@@ -89,9 +89,9 @@ export function normalizeProduct(raw) {
  * @returns {Promise<object[]>}
  */
 export async function fetchProducts() {
-  if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycby5zMxdOz3z5-MjSstgsRaCpt1200fG_QuNkNqjZdd5lgfQaUPE84jV2fnhpj8YKtoK/exec') {
+  if (!API_URL || API_URL === 'TU_URL_DE_GOOGLE_APPS_SCRIPT_AQUI' || !/^https?:\/\//i.test(API_URL)) {
     throw new Error(
-      'Configurá API_URL en js/api.js con la URL de tu Google Apps Script.'
+      'Configurá API_URL en js/api.js con la URL completa de tu Google Apps Script (debe empezar con https://).'
     );
   }
 
