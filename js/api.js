@@ -7,7 +7,7 @@
  */
 
 /** @type {string} URL del endpoint JSON de Google Apps Script */
-export const API_URL = 'https://script.google.com/macros/s/AKfycby5zMxdOz3z5-MjSstgsRaCpt1200fG_QuNkNqjZdd5lgfQaUPE84jV2fnhpj8YKtoK/exec';
+export const API_URL = 'https://script.google.com/macros/s/AKfycbyMIxQSkPgixtqnaeezNo-99H-K_aSdAmbCMCpj1Ng7nULiJX0cgZvBvsPE8Am7czLI/exec';
 
 /** Tiempo máximo de espera para la petición (ms) */
 const FETCH_TIMEOUT = 15000;
