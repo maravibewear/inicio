@@ -90,7 +90,7 @@ export function normalizeProduct(raw) {
  * @returns {Promise<object[]>}
  */
 export async function fetchProducts() {
-  if (!API_URL || API_URL === 'TU_URL_DE_GOOGLE_APPS_SCRIPT_AQUI' || !/^https?:\/\//i.test(API_URL)) {
+  if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbyMIxQSkPgixtqnaeezNo-99H-K_aSdAmbCMCpj1Ng7nULiJX0cgZvBvsPE8Am7czLI/exec' || !/^https?:\/\//i.test(API_URL)) {
     throw new Error(
       'Configurá API_URL en js/api.js con la URL completa de tu Google Apps Script (debe empezar con https://).'
     );
