@@ -6,6 +6,7 @@
  * Ejemplo: https://script.google.com/macros/s/AKfycb.../exec
  */
 
+
 /** @type {string} URL del endpoint JSON de Google Apps Script */
 export const API_URL = 'https://script.google.com/macros/s/AKfycbyMIxQSkPgixtqnaeezNo-99H-K_aSdAmbCMCpj1Ng7nULiJX0cgZvBvsPE8Am7czLI/exec';
 
