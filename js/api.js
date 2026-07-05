@@ -25,14 +25,28 @@ const FETCH_TIMEOUT = 15000;
  */
 export function normalizeImageUrl(url) {
   if (!url || typeof url !== 'string') return '';
-
   const trimmed = url.trim();
   if (!trimmed) return '';
 
-  // Ya es una URL directa de imagen
+  // Si ya es una URL directa de Google (perfiles, etc)
   if (/^https?:\/\/lh3\.googleusercontent\.com/i.test(trimmed)) {
     return trimmed;
   }
+
+  // Solución para la nueva política de Google Drive (Thumbnail bypass)
+  const fileMatch = trimmed.match(/\/file\/d\/([^\/]+)/);
+  if (fileMatch) {
+    return `https://drive.google.com/thumbnail?id=${fileMatch[1]}&sz=w1000`;
+}
+
+  const idMatch = trimmed.match(/[\?&]id=([^&]+)/);
+  if (idMatch) {
+    return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w1000`;
+  }
+
+  // Si es un link de Imgur o cualquier otra web, lo devuelve tal cual
+  return trimmed;
+}
 
   // Formato: /file/d/ID/
   const fileMatch = trimmed.match(/\/file\/d\/([^/]+)/);
