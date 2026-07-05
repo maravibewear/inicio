@@ -747,3 +747,8 @@ ul {
     grid-template-columns: 1fr;
   }
 }
+
+/* Forzar el ocultamiento de elementos cuando JS aplica el atributo hidden */
+[hidden] {
+  display: none !important;
+}
