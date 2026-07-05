@@ -87,6 +87,10 @@ export function createProductCardHTML(product) {
 
   const imgSrc = product.imagen || placeholder;
 
+  const tallesBadge = (product.enStock && product.talles)
+    ? `<span class="product-card__sizes">Talles: ${escapeHtml(product.talles)}</span>`
+    : '';
+  
   return `
     <article class="product-card" data-id="${escapeHtml(product.id)}">
       <div class="product-card__image-wrap">
@@ -116,6 +120,11 @@ export function createProductCardHTML(product) {
         >
           ${product.enStock ? 'Agregar al carrito' : 'Sin stock'}
         </button>
+      </div>
+      <div class="product-card__body">
+        <span class="product-card__category">${escapeHtml(product.categoria)}</span>
+        ${tallesBadge}
+        <h3 class="product-card__name">${escapeHtml(product.nombre)}</h3>
       </div>
     </article>
   `;
