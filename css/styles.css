@@ -17,8 +17,8 @@
   --color-sale: #d64545;
   --color-success: #25d366;
   --color-success-dark: #1da851;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Roboto', system-ui, sans-serif;
+  --font-display: 'Montserrat', sans-serif;
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
