@@ -1,77 +1,35 @@
 /**
  * api.js — Comunicación con Google Apps Script (Google Sheets)
- *
- * CONFIGURACIÓN:
- * Reemplazá API_URL con la URL de tu Web App desplegada en Apps Script.
- * Ejemplo: https://script.google.com/macros/s/AKfycb.../exec
  */
 
-
 /** @type {string} URL del endpoint JSON de Google Apps Script */
-export const API_URL = 'https://script.google.com/macros/s/AKfycbyMIxQSkPgixtqnaeezNo-99H-K_aSdAmbCMCpj1Ng7nULiJX0cgZvBvsPE8Am7czLI/exec';
+export const API_URL = 'https://script.google.com/macros/s/AKfycbyMIxQSkPgixtqnaeezNo-99H-K_aSdAmbCMCpj1Ng7nULiJX0cgZvBvsPE8Am7czLI/exec'; // <-- PEGA TU NUEVA URL ACA
 
 /** Tiempo máximo de espera para la petición (ms) */
 const FETCH_TIMEOUT = 15000;
 
-/**
- * Convierte URLs de Google Drive al formato directo para <img>.
- * Soporta:
- *  - https://drive.google.com/file/d/ID/view
- *  - https://drive.google.com/open?id=ID
- *  - https://lh3.googleusercontent.com/... (ya directas)
- *
- * @param {string} url
- * @returns {string}
- */
 export function normalizeImageUrl(url) {
   if (!url || typeof url !== 'string') return '';
   const trimmed = url.trim();
   if (!trimmed) return '';
 
-  // Si ya es una URL directa de Google (perfiles, etc)
   if (/^https?:\/\/lh3\.googleusercontent\.com/i.test(trimmed)) {
     return trimmed;
   }
 
-  // Solución para la nueva política de Google Drive (Thumbnail bypass)
   const fileMatch = trimmed.match(/\/file\/d\/([^\/]+)/);
   if (fileMatch) {
     return `https://drive.google.com/thumbnail?id=${fileMatch[1]}&sz=w1000`;
-}
+  }
 
   const idMatch = trimmed.match(/[\?&]id=([^&]+)/);
   if (idMatch) {
     return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w1000`;
   }
 
-  // Si es un link de Imgur o cualquier otra web, lo devuelve tal cual
   return trimmed;
 }
 
-  // Formato: /file/d/ID/
-  const fileMatch = trimmed.match(/\/file\/d\/([^/]+)/);
-  if (fileMatch) {
-    return `https://drive.google.com/uc?export=view&id=${fileMatch[1]}`;
-  }
-
-  // Formato: ?id=ID o &id=ID
-  const idMatch = trimmed.match(/[?&]id=([^&]+)/);
-  if (idMatch) {
-    return `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
-  }
-
-  return trimmed;
-}
-
-/**
- * Normaliza un producto crudo del JSON al formato interno de la app.
- *
- * Columnas esperadas en Google Sheets (primera fila = encabezados):
- * id | nombre | precio | descripcion | imagen | categoria | oferta | precio_anterior | stock
- *
- * @param {object} raw
- * @returns {object|null}
- */
 export function normalizeProduct(raw) {
   if (!raw) return null;
 
@@ -98,15 +56,10 @@ export function normalizeProduct(raw) {
   };
 }
 
-/**
- * Obtiene la lista de productos desde el endpoint JSON.
- *
- * @returns {Promise<object[]>}
- */
 export async function fetchProducts() {
-  if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbyMIxQSkPgixtqnaeezNo-99H-K_aSdAmbCMCpj1Ng7nULiJX0cgZvBvsPE8Am7czLI/exec' || !/^https?:\/\//i.test(API_URL)) {
+  if (!API_URL || API_URL === 'TU_URL_DE_GOOGLE_APPS_SCRIPT_AQUI' || !/^https?:\/\//i.test(API_URL)) {
     throw new Error(
-      'Configurá API_URL en js/api.js con la URL completa de tu Google Apps Script (debe empezar con https://).'
+      'Configurá API_URL en js/api.js con la URL completa de tu Google Apps Script.'
     );
   }
 
