@@ -17,24 +17,25 @@ export function normalizeImageUrl(url) {
 
 export function normalizeProduct(raw) {
   if (!raw) return null;
+  // Extraemos datos asegurándonos de que no falle si la columna no existe
   const id = String(raw.id ?? raw.ID ?? '').trim();
   const nombre = String(raw.nombre ?? raw.Nombre ?? raw.name ?? '').trim();
-  if (!id || !nombre) return null;
+  if (!id) return null;
 
   const imagenes = String(raw.imagen ?? raw.Imagen ?? '').split(',').map(u => normalizeImageUrl(u.trim())).filter(Boolean);
   
   return {
-    id,
-    nombre,
+    id: id,
+    nombre: nombre,
     descripcion: String(raw.descripcion ?? raw.Descripcion ?? '').trim(),
     imagenes: imagenes.length > 0 ? imagenes : [''],
     categoria: String(raw.categoria ?? raw.Categoria ?? 'General').trim(),
     enStock: String(raw.stock ?? raw.Stock ?? 'si').toLowerCase() !== 'no',
     colores: String(raw.color ?? raw.Color ?? '').split(',').map(c => c.trim()).filter(Boolean),
     talles: String(raw.talles ?? raw.Talles ?? '').split(',').map(t => t.trim()).filter(Boolean),
-    precioUnidad: parseFloat(raw.precio_unidad ?? raw.preciounidad ?? 0) || 0,
+    precioUnidad: parseFloat(raw.precio_unidad ?? raw.preciounidad ?? raw.precio ?? 0) || 0,
     precioBulto: parseFloat(raw.precio_bulto ?? raw.preciobulto ?? 0) || 0,
-    descBulto: String(raw.desc_bulto ?? raw.descbulto ?? 'Bulto').trim(),
+    descBulto: String(raw.desc_bulto ?? raw.descbulto ?? 'Bulto').trim()
   };
 }
 
