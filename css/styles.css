@@ -50,7 +50,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* PUNTO 4: AJUSTAR EL TAMAÑO DEL LOGO DEL HEADER */
 /* Modificá los "65px" al alto que prefieras (ej: 80px, 90px) */
-.header__logo-img { height: 65px; width: auto; object-fit: contain; }
+.header__logo-img { height: 120px; width: auto; object-fit: contain; }
 
 .header__nav { display: flex; gap: 32px; }
 .header__nav-link { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); transition: color var(--transition); }
@@ -133,7 +133,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* PUNTO 4: AJUSTAR EL TAMAÑO DEL LOGO DEL FOOTER */
 /* Modificá los "150px" a lo que necesites */
-.footer-logo-img { display: block; max-width: 150px; height: auto; margin-bottom: 16px; }
+.footer-logo-img { display: block; max-width: 100px; height: auto; margin-bottom: 16px; }
 
 .footer__tagline { font-size: 14px; color: rgba(255, 255, 255, 0.6); line-height: 1.5; }
 
