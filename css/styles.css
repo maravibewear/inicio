@@ -15,8 +15,7 @@
   --color-success: #25d366;
   --color-success-dark: #1da851;
   
-  /* PUNTO 5: ACÁ SE AJUSTAN LAS TIPOGRAFÍAS */
-  /* Si querés cambiar la fuente principal o la de los títulos, cambiás el nombre acá (ej. 'Montserrat', 'Lato') */
+  /* Fuentes base globales */
   --font-body: 'Montserrat', system-ui, sans-serif;
   --font-display: 'Montserrat', sans-serif;
   
@@ -24,7 +23,7 @@
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
   --radius-sm: 4px;
   --radius-md: 8px;
-  --header-height: 125px;
+  --header-height: 110px; 
   --transition: 0.25s ease;
 }
 
@@ -47,11 +46,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* --- Header --- */
 .header { position: sticky; top: 0; z-index: 100; height: var(--header-height); background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
 .header__inner { display: flex; align-items: center; justify-content: space-between; height: 100%; }
-
-/* PUNTO 4: AJUSTAR EL TAMAÑO DEL LOGO DEL HEADER */
-/* Modificá los "65px" al alto que prefieras (ej: 80px, 90px) */
-.header__logo-img { height: 120px; width: auto; object-fit: contain; }
-
+.header__logo-img { height: 90px; width: auto; object-fit: contain; }
 .header__nav { display: flex; gap: 32px; }
 .header__nav-link { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); transition: color var(--transition); }
 .header__nav-link:hover { color: var(--color-text); }
@@ -64,7 +59,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .btn--primary:hover { background: #333; }
 .btn--secondary { background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border); }
 
-/* --- Filtros de Categoría (Punto 2) --- */
+/* --- Filtros de Categoría --- */
 .category-filters { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; justify-content: center; }
 .filter-btn { padding: 8px 16px; font-size: 14px; font-weight: 500; border: 1px solid var(--color-border); border-radius: 20px; color: var(--color-text-muted); background: var(--color-surface); transition: var(--transition); }
 .filter-btn:hover { border-color: var(--color-text); color: var(--color-text); }
@@ -73,17 +68,35 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* --- Grid de Productos --- */
 .main { padding: 32px 0 64px; }
 .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
-.product-card { background: var(--color-surface); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); transition: transform var(--transition); cursor: pointer; }
+.product-card { background: var(--color-surface); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); transition: transform var(--transition); cursor: pointer; display: flex; flex-direction: column; }
 .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
 .product-card__image-wrap { position: relative; aspect-ratio: 1; overflow: hidden; background: #f0f0f0; }
 .product-card__image { width: 100%; height: 100%; object-fit: cover; }
-.product-card__body { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-.product-card__name { font-size: 14px; font-weight: 500; color: var(--color-text); }
-.product-card__price { font-size: 18px; font-weight: 700; color: var(--color-text); margin-top: auto; }
+.product-card__body { padding: 16px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.product-card__name { font-size: 14px; font-weight: 500; color: var(--color-text); line-height: 1.4; }
 
-/* --- Modal --- */
+/* NUEVO: Contenedor y filas de precio de la tarjeta principal */
+.product-card__price-container { margin-top: auto; display: flex; flex-direction: column; gap: 4px; }
+.product-card__price-row { font-size: 15px; font-weight: 700; color: var(--color-text); }
+
+/* --- Modal / Pop-up --- */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.modal-content { background: var(--color-surface); width: 100%; max-width: 800px; border-radius: var(--radius-md); position: relative; max-height: 90vh; overflow-y: auto; padding: 24px; }
+
+.modal-content { 
+  background: var(--color-surface); 
+  width: 100%; 
+  max-width: 800px; 
+  border-radius: var(--radius-md); 
+  position: relative; 
+  max-height: 90vh; 
+  overflow-y: auto; 
+  padding: 24px; 
+  
+  /* PUNTO 1: CAMBIAR LA TIPOGRAFÍA GENERAL DEL POP-UP ACÁ */
+  /* Podés cambiar var(--font-body) por el nombre exacto de la fuente que quieras (ej: 'Montserrat', sans-serif) */
+  font-family: var(--font-body); 
+}
+
 .modal-close { position: absolute; top: 16px; right: 16px; font-size: 24px; color: var(--color-text-muted); transition: color var(--transition); }
 .modal-close:hover { color: var(--color-text); }
 .modal-body { display: grid; grid-template-columns: 1fr; gap: 24px; }
@@ -92,7 +105,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .modal-thumbs { display: flex; gap: 8px; overflow-x: auto; }
 .modal-thumbs img { width: 60px; height: 60px; object-fit: cover; cursor: pointer; border-radius: var(--radius-sm); border: 2px solid transparent; }
 .modal-thumbs img.active { border-color: var(--color-text); }
-.modal-title { font-family: var(--font-display); font-size: 24px; margin-bottom: 8px; }
+
+/* TIPOGRAFÍA DEL TÍTULO DEL POP-UP */
+.modal-title { 
+  font-family: var(--font-display); /* Podés cambiar esta variable si querés otra fuente en el título */
+  font-size: 24px; 
+  margin-bottom: 8px; 
+}
+
 .modal-desc { color: var(--color-text-muted); font-size: 14px; margin-bottom: 24px; }
 .variant-group { margin-bottom: 16px; }
 .variant-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
@@ -126,20 +146,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .cart-item__subtotal { font-weight: 600; font-size: 14px; color: var(--color-text); }
 .cart-item__remove { color: var(--color-sale); font-size: 12px; text-decoration: underline; text-align: left; margin-top: 8px; align-self: flex-start;}
 
-/* --- Footer (Actualizado) --- */
+/* --- Footer --- */
 .footer { background: var(--color-text); color: rgba(255, 255, 255, 0.85); padding-top: 48px; }
 .footer__inner { padding-bottom: 32px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px; }
 .footer__brand { max-width: 300px; }
-
-/* PUNTO 4: AJUSTAR EL TAMAÑO DEL LOGO DEL FOOTER */
-/* Modificá los "150px" a lo que necesites */
-.footer-logo-img { display: block; max-width: 100px; height: auto; margin-bottom: 16px; }
-
+.footer-logo-img { display: block; max-width: 150px; height: auto; margin-bottom: 16px; }
 .footer__tagline { font-size: 14px; color: rgba(255, 255, 255, 0.6); line-height: 1.5; }
-
-/* Estilos de Redes Sociales */
 .footer__socials { display: flex; flex-direction: column; gap: 12px; }
 .social-link { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255,255,255,0.8); transition: color var(--transition); }
 .social-link:hover { color: #ffffff; }
-
 .footer__bottom { padding-block: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 13px; color: rgba(255, 255, 255, 0.4); text-align: center; }
