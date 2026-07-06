@@ -185,7 +185,6 @@ async function init() {
   const cartOverlay = document.getElementById('cartOverlay');
   const cartSidebar = document.getElementById('cartSidebar');
   const closeCart = document.getElementById('closeCart');
-  const cartBody = document.getElementById('cartBody');
   const btnCheckout = document.getElementById('btnCheckout');
   
   // Lógica para abrir/cerrar carrito
@@ -201,26 +200,6 @@ async function init() {
   if (cartToggle) cartToggle.addEventListener('click', openCartHandler);
   if (closeCart) closeCart.addEventListener('click', closeCartHandler);
   if (cartOverlay) cartOverlay.addEventListener('click', closeCartHandler);
-  
-  // Lógica para botones de +, - y Eliminar dentro del carrito
-  if (cartBody) {
-    cartBody.addEventListener('click', (e) => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
-      const vid = btn.dataset.vid;
-      
-      if (btn.classList.contains('qty-plus')) {
-        const item = getCart().find(i => i.variantId === vid);
-        if (item) updateQuantity(vid, item.cantidad + 1);
-      } else if (btn.classList.contains('qty-minus')) {
-        const item = getCart().find(i => i.variantId === vid);
-        if (item) updateQuantity(vid, item.cantidad - 1);
-      } else if (btn.classList.contains('remove-item')) {
-        removeFromCart(vid);
-      }
-      updateCartUI(); // Volvemos a pintar tras cada cambio
-    });
-  }
 
   // Envío a WhatsApp
   if (btnCheckout) {
