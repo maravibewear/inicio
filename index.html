@@ -6,20 +6,30 @@
   <title>Maravibewear | Tienda Online</title>
   
   <link rel="icon" type="image/png" href="" id="favicon">
-  
   <link rel="stylesheet" href="css/styles.css">
 </head>
-
-  <!-- Overlay del carrito -->
+<body>
   <div class="cart-overlay" id="cartOverlay" aria-hidden="true"></div>
 
-  <!-- Header -->
+  <div class="cart-sidebar" id="cartSidebar" aria-hidden="true">
+    <div class="cart-sidebar__header">
+      <h2>Tu Carrito</h2>
+      <button class="modal-close" id="closeCart">&times;</button>
+    </div>
+    <div class="cart-sidebar__body" id="cartBody"></div>
+    <div class="cart-sidebar__footer" id="cartFooter" hidden>
+      <div class="cart-sidebar__total">
+        <span>Total:</span>
+        <span id="cartTotal">$0</span>
+      </div>
+      <button id="btnCheckout" class="btn btn--primary">Comprar por WhatsApp</button>
+    </div>
+  </div>
+
   <header class="header">
     <div class="header__inner container">
       <a href="#" class="header__logo">
-        <img src="https://drive.google.com/thumbnail?id=110PUZNIxNsSS9wk2g3EGyMkhLAKJmfpt&sz=w1000" 
-             alt="Maravibewear" 
-             style="width: 150px; display: block;">
+        <img src="" alt="Maravibewear" class="header__logo-img brand-logo">
       </a>
       <nav class="header__nav">
         <a href="#productos" class="header__nav-link">Productos</a>
@@ -31,26 +41,21 @@
     </div>
   </header>
 
-  <!-- Contenido principal -->
   <main class="main">
     <section id="productos" class="container">
-      <!-- Carga -->
       <div id="loadingState" class="state loading-container">
         <div class="spinner"></div>
         <p>Cargando productos...</p>
       </div>
-      <!-- Error -->
       <div id="errorState" class="state" hidden>
         <p>Error al cargar. Verifica tu conexión o la URL del script.</p>
         <button onclick="location.reload()" class="btn btn--secondary">Reintentar</button>
       </div>
 
-      <!-- Grilla -->
       <div id="productsGrid" class="products-grid" hidden></div>
     </section>
   </main>
 
-  <!-- Modal -->
   <div class="modal-overlay" id="productModal" hidden>
     <div class="modal-content">
       <button class="modal-close" id="closeModal">&times;</button>
@@ -91,20 +96,17 @@
     </div>
   </div>
 
-  <!-- Footer con Imagen Restaurado -->
-<footer class="footer">
-  <div class="container footer__inner">
-    <div>
-      <img src="https://drive.google.com/thumbnail?id=110PUZNIxNsSS9wk2g3EGyMkhLAKJmfpt&sz=w1000" 
-           alt="Maravibewear" 
-           class="footer-logo-img">
-      <p class="footer__tagline">Lencería y comodidad para tu día a día.</p>
+  <footer class="footer" id="contacto">
+    <div class="container footer__inner">
+      <div>
+        <img src="" alt="Maravibewear" class="footer-logo-img brand-logo">
+        <p class="footer__tagline">Lencería y comodidad para tu día a día.</p>
+      </div>
     </div>
-  </div>
-  <div class="footer__bottom container">
-    <p>&copy; 2026 Maravibewear. Todos los derechos reservados.</p>
-  </div>
-</footer>
+    <div class="footer__bottom container">
+      <p>&copy; 2026 Maravibewear. Todos los derechos reservados.</p>
+    </div>
+  </footer>
 
   <script type="module" src="js/app.js"></script>
 </body>
