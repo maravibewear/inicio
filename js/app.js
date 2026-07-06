@@ -1,26 +1,7 @@
-/**
- * app.js — Punto de entrada: inicializa la tienda y conecta los módulos
- */
-
 import { fetchProducts } from './api.js';
-import {
-  setProducts,
-  getProducts,
-  renderProducts,
-  renderCategoryFilters,
-} from './products.js';
-import {
-  addToCart,
-  updateQuantity,
-  removeFromCart,
-  clearCart,
-  getCart,
-  getCartItemCount,
-  renderCart,
-  sendWhatsAppOrder,
-} from './cart.js';
+import { setProducts, getProducts, renderProducts, renderCategoryFilters } from './products.js';
+import { addToCart, updateQuantity, removeFromCart, clearCart, getCart, renderCart, sendWhatsAppOrder, formatPrice } from './cart.js';
 
-// --- Referencias DOM ---
 const loadingState = document.getElementById('loadingState');
 const errorState = document.getElementById('errorState');
 const productsGrid = document.getElementById('productsGrid');
@@ -41,167 +22,144 @@ const cartTotal = document.getElementById('cartTotal');
 const whatsappBtn = document.getElementById('whatsappBtn');
 const clearCartBtn = document.getElementById('clearCartBtn');
 
-const currentYear = document.getElementById('currentYear');
+// Variables para el Modal
+const productModal = document.getElementById('productModal');
+const closeModalBtn = document.getElementById('closeModal');
+let currentModalProduct = null;
+let modalQty = 1;
 
-// --- Inicialización ---
-
-currentYear.textContent = new Date().getFullYear();
-
-/**
- * Obtiene la cantidad de un producto en el carrito.
- * @param {string} id
- * @returns {number}
- */
-function getQty(id) {
-  return getCart().get(id) || 0;
+function init() {
+  document.getElementById('currentYear').textContent = new Date().getFullYear();
+  refreshCartUI();
+  loadCatalog();
 }
 
-/**
- * Actualiza badge del carrito y re-renderiza el drawer.
- */
-function refreshCartUI() {
-  const count = getCartItemCount();
+function showLoading() { loadingState.hidden = false; errorState.hidden = true; productsGrid.hidden = true; filtersSection.hidden = true; emptyState.hidden = true; }
+function showError() { loadingState.hidden = true; errorState.hidden = false; productsGrid.hidden = true; filtersSection.hidden = true; emptyState.hidden = true; }
+function showCatalog() { loadingState.hidden = true; errorState.hidden = true; renderCategoryFilters(categoryFilters, filtersSection, () => renderProducts(productsGrid, emptyState, productCount)); renderProducts(productsGrid, emptyState, productCount); }
 
-  if (count > 0) {
-    cartBadge.textContent = count;
-    cartBadge.hidden = false;
-  } else {
-    cartBadge.hidden = true;
-  }
-
-  renderCart(cartBody, cartFooter, cartTotal, getProducts());
-}
-
-/**
- * Re-renderiza catálogo y filtros.
- */
-function refreshCatalogUI() {
-  renderProducts(productsGrid, productCount, emptyState);
-  renderCategoryFilters(categoryFilters, filtersSection, refreshCatalogUI);
-}
-
-/**
- * Abre el carrito lateral.
- */
-function openCart() {
-  cartDrawer.classList.add('cart-drawer--open');
-  cartOverlay.classList.add('cart-overlay--visible');
-  cartDrawer.setAttribute('aria-hidden', 'false');
-  cartOverlay.setAttribute('aria-hidden', 'false');
-  cartToggle.setAttribute('aria-expanded', 'true');
-  document.body.style.overflow = 'hidden';
-}
-
-/**
- * Cierra el carrito lateral.
- */
-function closeCart() {
-  cartDrawer.classList.remove('cart-drawer--open');
-  cartOverlay.classList.remove('cart-overlay--visible');
-  cartDrawer.setAttribute('aria-hidden', 'true');
-  cartOverlay.setAttribute('aria-hidden', 'true');
-  cartToggle.setAttribute('aria-expanded', 'false');
-  document.body.style.overflow = '';
-}
-
-/**
- * Muestra estado de carga.
- */
-function showLoading() {
-  loadingState.hidden = false;
-  errorState.hidden = true;
-  productsGrid.hidden = true;
-  emptyState.hidden = true;
-}
-
-/**
- * Muestra estado de error.
- */
-function showError() {
-  loadingState.hidden = true;
-  errorState.hidden = false;
-  productsGrid.hidden = true;
-}
-
-/**
- * Muestra el catálogo cargado.
- */
-function showCatalog() {
-  loadingState.hidden = true;
-  errorState.hidden = true;
-  refreshCatalogUI();
-}
-
-/**
- * Carga productos desde la API y actualiza la UI.
- */
-async function loadProducts() {
+async function loadCatalog() {
   showLoading();
-
   try {
     const products = await fetchProducts();
     setProducts(products);
     showCatalog();
-  } catch (error) {
-    console.error('Error al cargar productos:', error);
-    showError();
-  }
+  } catch (error) { showError(); }
 }
 
-// --- Event listeners: Carrito ---
+function openCart() { cartDrawer.classList.add('cart-drawer--open'); cartOverlay.hidden = false; document.body.style.overflow = 'hidden'; }
+function closeCart() { cartDrawer.classList.remove('cart-drawer--open'); cartOverlay.hidden = true; document.body.style.overflow = ''; }
+function refreshCartUI() { renderCart(cartBody, cartFooter, cartTotal, cartBadge); }
 
 cartToggle.addEventListener('click', openCart);
 cartClose.addEventListener('click', closeCart);
 cartOverlay.addEventListener('click', closeCart);
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeCart();
-});
-
-whatsappBtn.addEventListener('click', () => {
-  sendWhatsAppOrder(getProducts());
-});
-
-clearCartBtn.addEventListener('click', () => {
-  if (confirm('¿Vaciar el carrito?')) {
-    clearCart();
-    refreshCartUI();
-  }
-});
+whatsappBtn.addEventListener('click', sendWhatsAppOrder);
+clearCartBtn.addEventListener('click', () => { if (confirm('¿Vaciar el carrito?')) { clearCart(); refreshCartUI(); } });
+retryBtn.addEventListener('click', loadCatalog);
 
 cartBody.addEventListener('click', (e) => {
   const target = e.target;
-
-  if (target.classList.contains('qty-plus')) {
-    updateQuantity(target.dataset.id, getQty(target.dataset.id) + 1);
-    refreshCartUI();
-  }
-
-  if (target.classList.contains('qty-minus')) {
-    updateQuantity(target.dataset.id, getQty(target.dataset.id) - 1);
-    refreshCartUI();
-  }
-
-  if (target.classList.contains('remove-item')) {
-    removeFromCart(target.dataset.id);
-    refreshCartUI();
-  }
+  const vid = target.dataset.vid;
+  if (!vid) return;
+  const item = getCart().find(i => i.variantId === vid);
+  if (target.classList.contains('qty-plus')) updateQuantity(vid, item.cantidad + 1);
+  if (target.classList.contains('qty-minus')) updateQuantity(vid, item.cantidad - 1);
+  if (target.classList.contains('remove-item')) removeFromCart(vid);
+  refreshCartUI();
 });
 
-// --- Event listeners: Catálogo ---
-
+// Lógica del Modal
 productsGrid.addEventListener('click', (e) => {
-  const btn = e.target.closest('.add-to-cart-btn');
-  if (!btn || btn.disabled) return;
+  const btn = e.target.closest('.open-modal-btn');
+  if (!btn) return;
+  const id = btn.dataset.id;
+  currentModalProduct = getProducts().find(p => p.id === id);
+  if (currentModalProduct) openModal();
+});
 
-  addToCart(btn.dataset.id);
+function openModal() {
+  const p = currentModalProduct;
+  modalQty = 1;
+  document.getElementById('modalQtyVal').textContent = modalQty;
+  document.getElementById('modalTitle').textContent = p.nombre;
+  document.getElementById('modalDesc').textContent = p.descripcion;
+  
+  // Galería
+  const mainImg = document.getElementById('modalMainImg');
+  const thumbs = document.getElementById('modalThumbs');
+  mainImg.src = p.imagenes[0] || '';
+  thumbs.innerHTML = p.imagenes.map((img, i) => `<img src="${img}" data-src="${img}" class="${i===0?'active':''}">`).join('');
+  
+  thumbs.querySelectorAll('img').forEach(thumb => {
+    thumb.addEventListener('click', (e) => {
+      mainImg.src = e.target.dataset.src;
+      thumbs.querySelectorAll('img').forEach(img => img.classList.remove('active'));
+      e.target.classList.add('active');
+    });
+  });
+
+  // Precios (Unidad / Bulto)
+  let pricesHtml = '';
+  if (p.precioUnidad > 0) {
+    pricesHtml += `<label><input type="radio" name="modalPrice" value="unidad" checked> Precio por Unidad: ${formatPrice(p.precioUnidad)}</label>`;
+  }
+  if (p.precioBulto > 0) {
+    const isChecked = p.precioUnidad <= 0 ? 'checked' : '';
+    pricesHtml += `<label><input type="radio" name="modalPrice" value="bulto" ${isChecked}> Precio por ${p.descBulto}: ${formatPrice(p.precioBulto)}</label>`;
+  }
+  document.getElementById('modalPrices').innerHTML = pricesHtml;
+
+  // Colores
+  const colorGroup = document.getElementById('colorGroup');
+  if (p.colores.length > 0) {
+    colorGroup.hidden = false;
+    document.getElementById('modalColor').innerHTML = p.colores.map(c => `<option value="${c}">${c}</option>`).join('');
+  } else {
+    colorGroup.hidden = true;
+  }
+
+  // Talles
+  const sizeGroup = document.getElementById('sizeGroup');
+  if (p.talles.length > 0) {
+    sizeGroup.hidden = false;
+    document.getElementById('modalSize').innerHTML = p.talles.map(t => `<option value="${t}">${t}</option>`).join('');
+  } else {
+    sizeGroup.hidden = true;
+  }
+
+  productModal.hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  productModal.hidden = true;
+  currentModalProduct = null;
+  document.body.style.overflow = '';
+}
+
+closeModalBtn.addEventListener('click', closeModal);
+productModal.addEventListener('click', (e) => { if (e.target === productModal) closeModal(); });
+
+document.getElementById('modalQtyPlus').addEventListener('click', () => { modalQty++; document.getElementById('modalQtyVal').textContent = modalQty; });
+document.getElementById('modalQtyMinus').addEventListener('click', () => { if (modalQty > 1) { modalQty--; document.getElementById('modalQtyVal').textContent = modalQty; } });
+
+document.getElementById('modalAddToCart').addEventListener('click', () => {
+  if (!currentModalProduct) return;
+  const p = currentModalProduct;
+  
+  const priceType = document.querySelector('input[name="modalPrice"]:checked')?.value || 'unidad';
+  const price = priceType === 'unidad' ? p.precioUnidad : p.precioBulto;
+  
+  const color = p.colores.length > 0 ? document.getElementById('modalColor').value : null;
+  const talle = p.talles.length > 0 ? document.getElementById('modalSize').value : null;
+
+  if (price <= 0) return alert('No hay un precio configurado para esta opción.');
+
+  addToCart(p, modalQty, { tipo: priceType, precio: price, color, talle });
   refreshCartUI();
+  closeModal();
   openCart();
 });
 
-retryBtn.addEventListener('click', loadProducts);
-
-// --- Arranque ---
-
-refreshCartUI();
-loadProducts();
+document.addEventListener('DOMContentLoaded', init);
