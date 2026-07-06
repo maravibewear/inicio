@@ -217,10 +217,28 @@ async function init() {
   aplicarLogo(); 
   updateCartBadge(); 
   
+  // NUEVO: Agregar escuchador para el carrito aquí mismo
+  const cartToggle = document.getElementById('cartToggle');
+  const cartOverlay = document.getElementById('cartOverlay');
+  
+  if (cartToggle && cartOverlay) {
+    cartToggle.addEventListener('click', () => {
+      cartOverlay.classList.add('active'); // O la clase que use tu CSS para mostrarlo
+    });
+  }
+  
+  // (Opcional) Si tienes un botón para cerrar el carrito
+  const closeCart = document.getElementById('closeCart');
+  if (closeCart) {
+    closeCart.addEventListener('click', () => {
+      cartOverlay.classList.remove('active');
+    });
+  }
+  
   try {
     const products = await fetchProducts();
     if (!products || products.length === 0) {
-      throw new Error("El Google Script devolvió una lista vacía. Verificá las columnas de tu Excel.");
+      throw new Error("El Google Script devolvió una lista vacía.");
     }
 
     loadingState.style.display = 'none';
